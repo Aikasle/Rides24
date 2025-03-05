@@ -19,8 +19,10 @@ import javax.persistence.TypedQuery;
 import configuration.ConfigXML;
 import configuration.UtilDate;
 import domain.Driver;
+import domain.User;
 import domain.Ride;
 import exceptions.RideAlreadyExistException;
+import exceptions.UserAlreadyExistException;
 import exceptions.RideMustBeLaterThanTodayException;
 
 /**
@@ -33,7 +35,7 @@ public class DataAccess  {
 
 	ConfigXML c=ConfigXML.getInstance();
 
-     public DataAccess()  {
+     public DataAccess()  {/*
 		if (c.isDatabaseInitialized()) {
 			String fileName=c.getDbFilename();
 
@@ -47,8 +49,9 @@ public class DataAccess  {
 				  System.out.println("Operation failed");
 				}
 		}
+		*/
 		open();
-		if  (c.isDatabaseInitialized())initializeDB();
+		if  (!c.isDatabaseInitialized())initializeDB();
 		
 		System.out.println("DataAccess created => isDatabaseLocal: "+c.isDatabaseLocal()+" isDatabaseInitialized: "+c.isDatabaseInitialized());
 
@@ -123,6 +126,7 @@ public class DataAccess  {
 			return cities;
 		
 	}
+
 	/**
 	 * This method returns all the arrival destinations, from all rides that depart from a given city  
 	 * 
@@ -227,7 +231,43 @@ public class DataAccess  {
 		  }
 	 	return res;
 	}
-	
+
+
+	/**
+	 * This method creates a ride for a driver
+	 *
+	 * @param username the username of the user
+	 * @param password of the user
+
+	 *
+	 * @return the created ride, or null, or an exception
+	 * @throws UserAlreadyExistException if the same ride already exists for the driver
+	 */
+	public User createUser(String username, String password) throws UserAlreadyExistException {
+		System.out.println(">> DataAccess: createUser > username: "+username+", password: " + password + "  ;");
+		try {
+			db.getTransaction().begin();
+
+			User user = db.find(User.class, username);
+			System.out.println("User: " + user);
+			if (user != null) { // TODO
+				db.getTransaction().commit();
+				throw new UserAlreadyExistException(ResourceBundle.getBundle("Etiquetas").getString("DataAccess.UserAlreadyExist"));
+			}
+			User user1 = new User(username, password);
+			//next instruction can be obviated
+			db.persist(user1);
+			db.getTransaction().commit();
+
+			return user1;
+		} catch (NullPointerException e) {
+			// TODO Auto-generated catch block
+			db.getTransaction().commit();
+			return null;
+		}
+
+
+	}
 
 public void open(){
 		
@@ -252,5 +292,6 @@ public void open(){
 		db.close();
 		System.out.println("DataAcess closed");
 	}
-	
+
+
 }

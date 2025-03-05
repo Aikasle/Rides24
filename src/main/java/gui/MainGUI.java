@@ -29,6 +29,8 @@ public class MainGUI extends JFrame {
 
 	private JPanel jContentPane = null;
 	private JButton jButtonCreateQuery = null;
+	private JButton jButtonRegister = null;
+	private JButton jButtonLogin = null;
 	private JButton jButtonQueryQueries = null;
 
     private static BLFacade appFacadeInterface;
@@ -113,12 +115,32 @@ public class MainGUI extends JFrame {
 				a.setVisible(true);
 			}
 		});
-		
+
+		jButtonLogin = new JButton();
+		jButtonLogin.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.Login"));
+		jButtonLogin.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				JFrame a = new CreateRideGUI(driver);
+				a.setVisible(true);
+			}
+		});
+
+		jButtonRegister = new JButton();
+		jButtonRegister.setText(ResourceBundle.getBundle("Etiquetas").getString("MainGUI.Register"));
+		jButtonRegister.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(java.awt.event.ActionEvent e) {
+				JFrame a = new RegisterGUI(driver);
+				a.setVisible(true);
+			}
+		});
+
 		jContentPane = new JPanel();
-		jContentPane.setLayout(new GridLayout(4, 1, 0, 0));
+		jContentPane.setLayout(new GridLayout(6, 1, 0, 0));
 		jContentPane.add(jLabelSelectOption);
 		jContentPane.add(jButtonCreateQuery);
 		jContentPane.add(jButtonQueryQueries);
+		jContentPane.add(jButtonLogin);
+		jContentPane.add(jButtonRegister);
 		jContentPane.add(panel);
 		
 		

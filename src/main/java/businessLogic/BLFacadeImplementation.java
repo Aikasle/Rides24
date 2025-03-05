@@ -10,8 +10,10 @@ import configuration.ConfigXML;
 import dataAccess.DataAccess;
 import domain.Ride;
 import domain.Driver;
+import domain.User;
 import exceptions.RideMustBeLaterThanTodayException;
 import exceptions.RideAlreadyExistException;
+import exceptions.UserAlreadyExistException;
 
 /**
  * It implements the business logic as a web service.
@@ -108,6 +110,17 @@ public class BLFacadeImplementation  implements BLFacade {
 		dB4oManager.close();
 
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@WebMethod
+	public User createUser(String username, String password) throws UserAlreadyExistException {
+		dbManager.open();
+		User user=dbManager.createUser(username, password);
+		dbManager.close();
+		return user;
+	};
 
 	/**
 	 * {@inheritDoc}
